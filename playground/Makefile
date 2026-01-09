@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 15:27:57      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/08 08:59:03     #########  #########  ###      ###       #
+#    Updated: 2026/01/09 14:21:53     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -20,15 +20,15 @@ all: build run
 build: headers
 	@\
 	echo "$(GRAY)Building image:$(RESET)	$(IMAGE_NAME)" ; \
-	docker build -t $(IMAGE_NAME) . && \
+	docker build --tag $(IMAGE_NAME) . && \
 	echo "$(GRAY)Image built:$(RESET)	$(IMAGE_NAME)"
 
 run:
 	@\
 	echo "$(GRAY)Starting:$(RESET)		$(CONTAINER_NAME)" ; \
-	docker run -d --name $(CONTAINER_NAME) -p $(PORT):443 $(IMAGE_NAME) && \
+	docker run --detach --name $(CONTAINER_NAME) --publish $(PORT):443 $(IMAGE_NAME) && \
 	echo "$(GRAY)Container:$(RESET)		Started" ;\
-	echo "$(GRAY)Available:$(RESET)		http://localhost:$(PORT)" 
+	echo "$(GRAY)Available:$(RESET)		http://127.0.0.1:$(PORT)" 
 
 stop:
 	@\
@@ -68,7 +68,8 @@ BLUE	:= \033[1;96m
 
 ###################################################################### Headers #
 headers:
-	@for file in $$(find . -name "Makefile"); do 							\
+	@\
+	for file in $$(find . -name "Makefile"); do 							\
 		if [ -f "$$file" ]; then 											\
 			first_line=$$(head -n 1 "$$file"); 								\
 			if [ "$$first_line" != "#  **************************************************************************  #" ]; then 			\

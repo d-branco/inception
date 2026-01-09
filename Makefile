@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/07 21:05:37     #########  #########  ###      ###       #
+#    Updated: 2026/01/08 15:21:30     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -37,7 +37,7 @@ headers:
 				cat $$file >> temp.txt; 									\
 				cat temp.txt > $$file; 										\
 				rm -f temp.txt; 											\
-				echo "$(GRAY)Header create:$(RESET) $$file"; 					\
+				echo "$(GRAY)Header create:$(RESET) $$file"; 				\
 			else 															\
 				header_date=$$(sed -n '8p' "$$file" | 						\
 					sed 's/.*Updated: \([0-9/: ]*\).*/\1/'); 				\
@@ -47,7 +47,7 @@ headers:
 				file_epoch=$$(stat -c %Y "$$file"); 						\
 																			\
 				if [ $$file_epoch -gt $$header_epoch ]; then 				\
-					echo "$(GRAY)Header update:$(RESET) $$file"; 				\
+					echo "$(GRAY)Header update:$(RESET) $$file"; 			\
 					update_date=$$(date '+%Y/%m/%d %H:%M:%S'); 				\
 					sed -i "8s|.*|#    Updated: $$update_date     #########  #########  ###      ###       #|" "$$file"; \
 				fi; 														\
@@ -74,7 +74,7 @@ headers:
 				cat $$file >> temp.txt; 									\
 				cat temp.txt > $$file; 										\
 				rm -f temp.txt; 											\
-				echo "$(GRAY)Header create:$(RESET) $$file"; 					\
+				echo "$(GRAY)Header create:$(RESET) $$file"; 				\
 			else 															\
 				header_date=$$(sed -n '8p' "$$file" | 						\
 					sed 's/.*Updated: \([0-9/: ]*\).*/\1/'); 				\
@@ -84,7 +84,7 @@ headers:
 				file_epoch=$$(stat -c %Y "$$file"); 						\
 																			\
 				if [ $$file_epoch -gt $$header_epoch ]; then 				\
-					echo "$(GRAY)Header update:$(RESET) $$file"; 				\
+					echo "$(GRAY)Header update:$(RESET) $$file"; 			\
 					update_date=$$(date '+%Y/%m/%d %H:%M:%S'); 				\
 					sed -i "8s|.*|<!-- Updated: $$update_date     #########  #########  ###      ###     -->|" "$$file"; \
 				fi; 														\
