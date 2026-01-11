@@ -1,0 +1,21 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: playground-nginx
+
+    container_name: playground-nginx-container
+
+    ports:
+      - "443:443"
+
+    networks:
+      - inception-network
+
+    restart: unless-stopped
+
+networks:
+  inception-network:
+    driver: bridge

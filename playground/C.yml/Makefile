@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 15:27:57      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/10 11:07:44     #########  #########  ###      ###       #
+#    Updated: 2026/01/11 08:51:08     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -25,7 +25,7 @@ up:
 	@\
 	echo "$(GRAY)Starting services:$(RESET)" ; \
 	docker compose up --detach && \
-	echo "$(GRAY)Status:$(RESET)			Available at https://127.0.0.1"
+	echo "$(GRAY)Status:$(RESET)			Link https://127.0.0.1"
 
 stop:
 	@\
