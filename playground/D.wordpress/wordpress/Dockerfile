@@ -11,19 +11,25 @@
 
 FROM alpine:3.22
 
-RUN apk add --no-cache nginx openssl
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+    php83 \
+    php83-fpm \
+    php83-mysqli \
+    php83-phar \
+    curl
 
-RUN mkdir -p /etc/nginx/ssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/nginx/ssl/inception.key \
-    -out /etc/nginx/ssl/inception.crt \
-    -subj "/C=PT/ST=Porto/L=Porto/O=42/OU=42Porto/CN=abessa-m.42.fr"
+# Configure PHP-FPM
+RUN mkdir -p /var/www/html /run/php && \
+    adduser -u 82 -D -S -G www-data www-data && \
+    chown -R www-data:www-data /var/www/html /run/php
 
-	RUN mkdir -p /run/nginx
+COPY conf/www.conf /etc/php83/php-fpm.d/www.conf
+COPY tools/setup.sh /usr/local/bin/setup.sh
+RUN chmod +x /usr/local/bin/setup.sh
 
-COPY html/ /var/www/html/
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /var/www/html
 
-EXPOSE 443
+EXPOSE 9000
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/local/bin/setup.sh"]

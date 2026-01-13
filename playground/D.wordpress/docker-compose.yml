@@ -1,0 +1,34 @@
+services:
+  wordpress:
+    build:
+      context: ./wordpress
+    image: playground-wordpress
+    container_name: playground-wordpress-container
+    restart: unless-stopped
+    networks:
+      - inception-network
+    volumes:
+      - wp_files:/var/www/html
+
+  nginx:
+    build:
+      context: ./nginx
+    image: playground-nginx
+    container_name: playground-nginx-container
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    networks:
+      - inception-network
+    volumes:
+      - wp_files:/var/www/html
+    depends_on:
+      - wordpress
+
+networks:
+  inception-network:
+    driver: bridge
+
+volumes:
+  wp_files:
+    driver: local
