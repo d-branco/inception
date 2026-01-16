@@ -1,0 +1,46 @@
+services:
+  mariadb:
+    build:
+      context: ./mariadb
+    image: mariadb
+    container_name: playground-mariadb-container
+    restart: unless-stopped
+    networks:
+      - inception-network
+    volumes:
+      - ${DATA_PATH}/mariadb:/var/lib/mysql
+    env_file: .env
+
+  wordpress:
+    build:
+      context: ./wordpress
+    image: wordpress
+    container_name: playground-wordpress-container
+    restart: unless-stopped
+    networks:
+      - inception-network
+    volumes:
+      - ${DATA_PATH}/wordpress:/var/www/html
+    depends_on:
+      - mariadb
+    env_file: .env
+
+  nginx:
+    build:
+      context: ./nginx
+    image: nginx
+    container_name: playground-nginx-container
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    networks:
+      - inception-network
+    volumes:
+      - ${DATA_PATH}/wordpress:/var/www/html
+    depends_on:
+      - wordpress
+    env_file: .env
+
+networks:
+  inception-network:
+    driver: bridge

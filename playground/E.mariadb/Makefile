@@ -5,17 +5,16 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 15:27:57      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/15 18:39:18     #########  #########  ###      ###       #
+#    Updated: 2026/01/16 11:30:18     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
-DOMAIN_NAME=abessa-m.42.fr
+include .env
+export
 
 ###################################################################### Targets #
 
-all: build
-	@\
-	echo "$(GRAY)Status:$(RESET)			Run 'make up' to start."
+all: build up
 
 build: headers
 	@\
@@ -23,16 +22,20 @@ build: headers
 	sudo docker compose build && \
 	echo "$(GRAY)Status:$(RESET)			Build complete."
 
-hosts:
-	@if ! grep -q "$(DOMAIN_NAME)" /etc/hosts; then \
+up:
+	@\
+	sudo mkdir -p $(DATA_PATH)/mariadb ; \
+	sudo mkdir -p $(DATA_PATH)/wordpress ; \
+	sudo chmod 777 $(DATA_PATH)/mariadb ; \
+	sudo chmod 777 $(DATA_PATH)/wordpress ;
+	\
+	if ! grep -q "$(DOMAIN_NAME)" /etc/hosts; then \
 		echo "127.0.0.1 $(DOMAIN_NAME)" | sudo tee -a /etc/hosts && \
 		echo "$(GRAY)Added $(DOMAIN_NAME) to /etc/hosts$(RESET)"; \
 	else \
 		echo "$(GRAY)Domain $(DOMAIN_NAME) in /etc/hosts$(RESET)" ; \
-	fi
-
-up: hosts
-	@\
+	fi ; \
+	\
 	echo "$(GRAY)Starting services:$(RESET)" ; \
 	sudo docker compose up --detach && \
 	echo "$(GRAY)Status:$(RESET)			Link https://$(DOMAIN_NAME)"
@@ -49,27 +52,27 @@ clean:
 
 fclean: clean
 	@\
-	echo "$(GRAY)Full cleanup (images/volumes):$(RESET)" ; \
+	echo "$(GRAY)Cleaning containers, images and volumes:$(RESET)" ; \
 	sudo docker compose down --rmi all --volumes --remove-orphans
 
 re: fclean all
 
 status:
 	@\
-	echo "\n$(GRAY)    Containers:$(RESET)" ; \
+	echo "$(GRAY)    Containers:$(RESET)" ; \
 	sudo docker ps -a ; \
-	echo "\n$(GRAY)    Images:$(RESET)" ; \
+	echo "$(GRAY)    Images:$(RESET)" ; \
 	sudo docker image ls ; \
-	echo "\n$(GRAY)    Volumes:$(RESET)" ; \
+	echo "$(GRAY)    Volumes:$(RESET)" ; \
 	sudo docker volume ls ; \
-	echo "\n$(GRAY)    Networks:$(RESET)" ; \
+	echo "$(GRAY)    Networks:$(RESET)" ; \
 	sudo docker network ls
 
 
 shell:
 	sudo docker compose exec nginx sh
 
-.PHONY: all build up stop clean fclean re status logs shell
+.PHONY: all build up stop clean fclean re status shell
 
 ####################################################################### Colors #
 RESET	:= \033[0m

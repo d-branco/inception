@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/15 16:30:01     #########  #########  ###      ###       #
+#    Updated: 2026/01/15 18:31:35     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -53,9 +53,9 @@ status:
 	sudo docker compose -f srcs/docker-compose.yml ps ; \
 	echo "\n$(GRAY)    Containers:$(RESET)" ; \
 	sudo docker ps -a ; \
-	echo "\n$(GRAY)    IMAGES:$(RESET)" ; \
+	echo "\n$(GRAY)    images:$(RESET)" ; \
 	sudo docker image ls ; \
-	echo "\n$(GRAY)    VOLUMES:$(RESET)" ; \
+	echo "\n$(GRAY)    Volumes:$(RESET)" ; \
 	sudo docker volume ls ; \
 	echo "\n$(PURPLE)    Project network:$(RESET)" ; \
 	sudo docker network ls --filter "name=inception-network" ; \
