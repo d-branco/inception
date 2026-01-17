@@ -8,7 +8,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     chown -R mysql:mysql /var/lib/mysql
 
     # Initialize database
-    mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
+    mariadb-install-db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
 
     # Create setup file
     tfile=`mktemp`
@@ -33,10 +33,10 @@ FLUSH PRIVILEGES;
 EOF
 
     # Run bootstrap
-    /usr/bin/mysqld --user=mysql --bootstrap < $tfile
+    /usr/bin/mariadbd --user=mysql --bootstrap < $tfile
     rm -f $tfile
     
     echo "Database initialized."
 fi
 
-exec /usr/bin/mysqld --user=mysql --console
+exec /usr/bin/mariadbd --user=mysql --console
