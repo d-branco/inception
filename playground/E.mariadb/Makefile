@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 15:27:57      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/17 10:45:07     #########  #########  ###      ###       #
+#    Updated: 2026/01/17 11:26:20     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -19,7 +19,7 @@ all: build up
 build: headers
 	@\
 	echo "$(GRAY)Building services:$(RESET)" ; \
-	sudo docker compose build && \
+	docker compose build && \
 	echo "$(GRAY)Status:$(RESET)			Build complete."
 
 up:
@@ -27,7 +27,7 @@ up:
 	sudo mkdir -p $(DATA_PATH)/mariadb ; \
 	sudo mkdir -p $(DATA_PATH)/wordpress ; \
 	sudo chmod 777 $(DATA_PATH)/mariadb ; \
-	sudo chmod 777 $(DATA_PATH)/wordpress ;
+	sudo chmod 777 $(DATA_PATH)/wordpress ; \
 	\
 	if ! grep -q "$(DOMAIN_NAME)" /etc/hosts; then \
 		echo "127.0.0.1 $(DOMAIN_NAME)" | sudo tee -a /etc/hosts && \
@@ -37,40 +37,40 @@ up:
 	fi ; \
 	\
 	echo "$(GRAY)Starting services:$(RESET)" ; \
-	sudo docker compose up --detach && \
+	docker compose up --detach && \
 	echo "$(GRAY)Status:$(RESET)			Link https://$(DOMAIN_NAME)"
 
 stop:
 	@\
 	echo "$(GRAY)Stopping services:$(RESET)" ; \
-	sudo docker compose stop
+	docker compose stop
 
 clean:
 	@\
 	echo "$(GRAY)Cleaning containers:$(RESET)" ; \
-	sudo docker compose down
+	docker compose down
 
 fclean: clean
 	@\
 	echo "$(GRAY)Cleaning containers, images and volumes:$(RESET)" ; \
-	sudo docker compose down --rmi all --volumes --remove-orphans
+	docker compose down --rmi all --volumes --remove-orphans
 
 re: fclean all
 
 status:
 	@\
 	echo "$(GRAY)    Containers:$(RESET)" ; \
-	sudo docker ps -a ; \
+	docker ps -a ; \
 	echo "$(GRAY)    Images:$(RESET)" ; \
-	sudo docker image ls ; \
+	docker image ls ; \
 	echo "$(GRAY)    Volumes:$(RESET)" ; \
-	sudo docker volume ls ; \
+	docker volume ls ; \
 	echo "$(GRAY)    Networks:$(RESET)" ; \
-	sudo docker network ls
+	docker network ls
 
 
 shell:
-	sudo docker compose exec nginx sh
+	docker compose exec nginx sh
 
 .PHONY: all build up stop clean fclean re status shell
 
