@@ -5,75 +5,81 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/17 11:01:58     #########  #########  ###      ###       #
+#    Updated: 2026/01/19 11:55:46     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
-## Variables to load environment variables from .env file
 include srcs/.env
 export $(shell sed 's/=.*//' srcs/.env)
 
 ###################################################################### Targets #
 
-all: build
-	@\
-	echo "$(GRAY)Status:$(RESET)			Run 'make up' to start."
+all: build up
 
 build: headers
 	@\
 	echo "$(GRAY)Building services:$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml build && \
+	docker compose -f srcs/docker-compose.yml build && \
 	echo "$(GRAY)Status:$(RESET)			Build complete."
 
-prepare:
-	@echo "$(GRAY)Creating data directories in:$(RESET) $(DATA_PATH)"
-	@
-	@
-
-up: prepare
+up:
 	@\
-	mkdir -p $(DATA_PATH)/mariadb && \
-	mkdir -p $(DATA_PATH)/wordpress && \
+	mkdir -p $(DATA_PATH)/mariadb ; \
+	mkdir -p $(DATA_PATH)/wordpress ; \
+	chmod 777 $(DATA_PATH)/mariadb ; \
+	chmod 777 $(DATA_PATH)/wordpress ; \
+	\
+	if ! grep -q "$(DOMAIN_NAME)" /etc/hosts; then \
+		echo "127.0.0.1 $(DOMAIN_NAME)" | sudo tee -a /etc/hosts && \
+		echo "$(GRAY)Added $(DOMAIN_NAME) to /etc/hosts$(RESET)"; \
+	else \
+		echo "$(GRAY)Domain $(DOMAIN_NAME) in /etc/hosts$(RESET)" ; \
+	fi ; \
+	\
 	echo "$(GRAY)Starting services:$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml up --detach && \
-	echo "$(GRAY)Status:$(RESET)			Link https://127.0.0.1"
+	docker compose -f srcs/docker-compose.yml up --detach && \
+	echo "$(GRAY)Status:$(RESET)			Link https://$(DOMAIN_NAME)"
 
 stop:
 	@\
 	echo "$(GRAY)Stopping services:$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml stop
+	docker compose -f srcs/docker-compose.yml stop
 
-down:
-	@echo "$(GRAY)Cleaning containers:$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml down
-
-status:
+clean:
 	@\
-	echo "$(PURPLE)    Project Status:$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml ps ; \
-	echo "\n$(GRAY)    Containers:$(RESET)" ; \
-	sudo docker ps -a ; \
-	echo "\n$(GRAY)    images:$(RESET)" ; \
-	sudo docker image ls ; \
-	echo "\n$(GRAY)    Volumes:$(RESET)" ; \
-	sudo docker volume ls ; \
-	echo "\n$(PURPLE)    Project network:$(RESET)" ; \
-	sudo docker network ls --filter "name=inception-network" ; \
-	echo "\n$(GRAY)    Networks:$(RESET)" ; \
-	sudo docker network ls
+	echo "$(GRAY)Cleaning containers:$(RESET)" ; \
+	docker compose -f srcs/docker-compose.yml down
 
-logs:
+fclean: clean
 	@\
-	sudo docker compose -f srcs/docker-compose.yml logs -f
+	echo "$(GRAY)Cleaning containers, images and volumes:$(RESET)" ; \
+	docker compose -f srcs/docker-compose.yml down --rmi all --volumes --remove-orphans
 
-fclean:
+oblivion: fclean
 	@\
-	echo "$(GRAY)Full cleanup (images/volumes):$(RESET)" ; \
-	sudo docker compose -f srcs/docker-compose.yml down --rmi all --volumes --remove-orphans
+	echo "$(GRAY)Permanently deleting all docker data$(RESET)" ; \
+	docker stop $$(docker ps -qa) 2>/dev/null || true ; \
+	docker system prune --all --volumes --force ; \
+	rm -rf $(DATA_PATH) ; \
+	echo "$(GRAY)Oblivion achieved.$(RESET)"
 
 re: fclean all
 
-.PHONY: all build up stop down status logs fclean re
+status:
+	@\
+	echo "$(GRAY)    Containers:$(RESET)" ; \
+	docker ps -a ; \
+	echo "$(GRAY)    Images:$(RESET)" ; \
+	docker image ls ; \
+	echo "$(GRAY)    Volumes:$(RESET)" ; \
+	docker volume ls ; \
+	echo "$(GRAY)    Networks:$(RESET)" ; \
+	docker network ls
+
+shell:
+	docker compose -f srcs/docker-compose.yml exec nginx sh
+
+.PHONY: all build up stop clean fclean re status shell oblivion
 ###################################################################### Colors #
 RESET	:= \033[0m
 PURPLE	:= \033[1;35m
