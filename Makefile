@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/19 11:55:46     #########  #########  ###      ###       #
+#    Updated: 2026/01/20 16:13:12     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -24,10 +24,10 @@ build: headers
 
 up:
 	@\
-	mkdir -p $(DATA_PATH)/mariadb ; \
-	mkdir -p $(DATA_PATH)/wordpress ; \
-	chmod 777 $(DATA_PATH)/mariadb ; \
-	chmod 777 $(DATA_PATH)/wordpress ; \
+	sudo mkdir -p $(DATA_PATH)/mariadb ; \
+	sudo mkdir -p $(DATA_PATH)/wordpress ; \
+	sudo chmod 777 $(DATA_PATH)/mariadb ; \
+	sudo chmod 777 $(DATA_PATH)/wordpress ; \
 	\
 	if ! grep -q "$(DOMAIN_NAME)" /etc/hosts; then \
 		echo "127.0.0.1 $(DOMAIN_NAME)" | sudo tee -a /etc/hosts && \
@@ -60,7 +60,7 @@ oblivion: fclean
 	echo "$(GRAY)Permanently deleting all docker data$(RESET)" ; \
 	docker stop $$(docker ps -qa) 2>/dev/null || true ; \
 	docker system prune --all --volumes --force ; \
-	rm -rf $(DATA_PATH) ; \
+	sudo rm -rf $(DATA_PATH) ; \
 	echo "$(GRAY)Oblivion achieved.$(RESET)"
 
 re: fclean all

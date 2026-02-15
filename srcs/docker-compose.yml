@@ -38,6 +38,19 @@ services:
     depends_on:
       - wordpress
 
+  adminer:
+    build: ./requirements/adminer
+    image: adminer
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8084:80"
+    env_file: .env
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+
 networks:
   inception:
     driver: bridge
