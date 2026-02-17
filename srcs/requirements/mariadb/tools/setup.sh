@@ -4,19 +4,10 @@ mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
-    
     chown -R mysql:mysql /var/lib/mysql
-
-    # Initialize database
     mariadb-install-db --basedir=/usr --datadir=/var/lib/mysql --user=mysql > /dev/null
 
-    # Create setup file
-    tfile=`mktemp`
-    if [ ! -f "$tfile" ]; then
-        return 1
-    fi
-
-    cat << EOF > $tfile
+    cat > /tmp/init.sql << EOF
 USE mysql;
 FLUSH PRIVILEGES;
 
@@ -32,11 +23,9 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';
 FLUSH PRIVILEGES;
 EOF
 
-    # Run bootstrap
-    /usr/bin/mariadbd --user=mysql --bootstrap < $tfile
-    rm -f $tfile
-    
+    /usr/bin/mariadbd --user=mysql --init-file=/tmp/init.sql
+    rm -f /tmp/init.sql
     echo "Database initialized."
 fi
 
-exec /usr/bin/mariadbd --user=mysql --console
+exec /usr/bin/mariadbd --user=mysql

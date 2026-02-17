@@ -9,6 +9,11 @@ services:
       - ${DATA_PATH}/mariadb:/var/lib/mysql
     networks:
       - inception
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   wordpress:
     build: ./requirements/wordpress
@@ -20,8 +25,14 @@ services:
       - ${DATA_PATH}/wordpress:/var/www/html
     networks:
       - inception
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm83 -t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
 
   nginx:
     build: ./requirements/nginx
@@ -36,7 +47,8 @@ services:
     networks:
       - inception
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
 
   adminer:
     build: ./requirements/adminer

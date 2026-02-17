@@ -1,12 +1,5 @@
 #!/bin/sh
 
-# Wait for MariaDB
-echo "Waiting for MariaDB..."
-while ! mariadb -h mariadb -u $DB_USER -p$DB_PASSWORD -e "SELECT 1;" > /dev/null 2>&1; do
-    sleep 1
-done
-echo "MariaDB is ready!"
-
 # Validate Admin Username (Requirement check)
 # The username cannot contain: admin, Admin, administrator, Administrator, or variations.
 if echo "$WP_ADMIN_USER" | grep -iq "admin"; then

@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/20 16:13:12     #########  #########  ###      ###       #
+#    Updated: 2026/02/15 11:25:12     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -19,7 +19,7 @@ all: build up
 build: headers
 	@\
 	echo "$(GRAY)Building services:$(RESET)" ; \
-	docker compose -f srcs/docker-compose.yml build && \
+	docker compose -f srcs/docker-compose.yaml build && \
 	echo "$(GRAY)Status:$(RESET)			Build complete."
 
 up:
@@ -37,23 +37,23 @@ up:
 	fi ; \
 	\
 	echo "$(GRAY)Starting services:$(RESET)" ; \
-	docker compose -f srcs/docker-compose.yml up --detach && \
+	docker compose -f srcs/docker-compose.yaml up --detach && \
 	echo "$(GRAY)Status:$(RESET)			Link https://$(DOMAIN_NAME)"
 
 stop:
 	@\
 	echo "$(GRAY)Stopping services:$(RESET)" ; \
-	docker compose -f srcs/docker-compose.yml stop
+	docker compose -f srcs/docker-compose.yaml stop
 
 clean:
 	@\
 	echo "$(GRAY)Cleaning containers:$(RESET)" ; \
-	docker compose -f srcs/docker-compose.yml down
+	docker compose -f srcs/docker-compose.yaml down
 
 fclean: clean
 	@\
 	echo "$(GRAY)Cleaning containers, images and volumes:$(RESET)" ; \
-	docker compose -f srcs/docker-compose.yml down --rmi all --volumes --remove-orphans
+	docker compose -f srcs/docker-compose.yaml down --rmi all --volumes --remove-orphans
 
 oblivion: fclean
 	@\
@@ -77,7 +77,7 @@ status:
 	docker network ls
 
 shell:
-	docker compose -f srcs/docker-compose.yml exec nginx sh
+	docker compose -f srcs/docker-compose.yaml exec nginx sh
 
 .PHONY: all build up stop clean fclean re status shell oblivion
 ###################################################################### Colors #
