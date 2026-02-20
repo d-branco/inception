@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - ${DATA_PATH}/mariadb:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     networks:
       - inception
     healthcheck:
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - ${DATA_PATH}/wordpress:/var/www/html
+      - wordpress:/var/www/html
     networks:
       - inception
     healthcheck:
@@ -43,7 +43,7 @@ services:
       - "443:443"
     env_file: .env
     volumes:
-      - ${DATA_PATH}/wordpress:/var/www/html
+      - wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -51,7 +51,7 @@ services:
         condition: service_healthy
 
   adminer:
-    build: ./requirements/adminer
+    build: ./requirements/bonus/adminer
     image: adminer
     container_name: adminer
     restart: unless-stopped
@@ -66,3 +66,17 @@ services:
 networks:
   inception:
     driver: bridge
+
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mariadb
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/wordpress
