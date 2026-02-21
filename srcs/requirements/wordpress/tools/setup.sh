@@ -39,6 +39,13 @@ if [ ! -f "wp-config.php" ]; then
         --role=author \
         --allow-root
 
+    # Configure Redis
+    echo "Configuring Redis cache..."
+    php -d memory_limit=512M /usr/local/bin/wp config set WP_REDIS_HOST redis --allow-root
+    php -d memory_limit=512M /usr/local/bin/wp config set WP_REDIS_PORT 6379 --allow-root
+    php -d memory_limit=512M /usr/local/bin/wp plugin install redis-cache --activate --allow-root
+    php -d memory_limit=512M /usr/local/bin/wp redis enable --allow-root
+
     chown -R www-data:www-data /var/www/html
 fi
 

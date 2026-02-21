@@ -1,29 +1,21 @@
 #  **************************************************************************  #
 #                                           ::::::::    ::::::::   :::::::::   #
-#    .env                                 :+:    :+:  :+:    :+:  :+:          #
+#    Dockerfile                           :+:    :+:  :+:    :+:  :+:          #
 #                                              +:+         :+:   :+:           #
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
-#    Created: 2026/01/15 18:31:35      #+#         #+#      +#+        #+#     #
+#    Created: 2026/02/20 20:53:45      #+#         #+#      +#+        #+#     #
 #    Updated: 2026/02/20 20:53:45     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
-DOMAIN_NAME=abessa-m.42.fr
+FROM alpine:3.22
 
-DATA_PATH=~/data_inception
+RUN apk update && apk upgrade && \
+    apk add --no-cache redis
 
-# mariaDB
-DB_NAME=wordpress_db
-DB_USER=wp_user
-DB_PASSWORD=themirrorsedge
-DB_ROOT_PASSWORD=betweentheglossandthereality
+COPY conf/redis.conf /etc/redis.conf
 
-# WordPress
-WP_TITLE=Inception
-WP_ADMIN_USER=sandra
-WP_ADMIN_PASSWORD=thefactorygrows
-WP_ADMIN_EMAIL=sandra@mail.net
-WP_USER=vital
-WP_PASSWORD=thecakeisalie
-WP_EMAIL=vital@exmailample.net
+EXPOSE 6379
+
+CMD ["redis-server", "/etc/redis.conf"]
