@@ -78,6 +78,23 @@ services:
     depends_on:
       - mariadb
 
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ftp
+    container_name: ftp
+    restart: unless-stopped
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
 networks:
   inception:
     driver: bridge
