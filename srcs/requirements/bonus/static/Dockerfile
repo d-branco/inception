@@ -4,20 +4,22 @@
 #                                              +:+         :+:   :+:           #
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
-#    Created: 2026/02/21 08:09:22      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/02/22 13:35:03     #########  #########  ###      ###       #
+#    Created: 2026/02/22 15:15:48      #+#         #+#      +#+        #+#     #
+#    Updated: 2026/02/22 15:30:45     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
 FROM alpine:3.22
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache vsftpd
+RUN apk update && apk add --no-cache python3
 
-COPY conf/vsftpd.conf /etc/vsftpd/vsftpd.conf
+WORKDIR /var/www/static
+COPY html/ /var/www/static/
+
+# Entrypoint script
 COPY tools/setup.sh /usr/local/bin/setup.sh
 RUN chmod +x /usr/local/bin/setup.sh
 
-EXPOSE 21 21100-21110
+EXPOSE 8080
 
 ENTRYPOINT ["/usr/local/bin/setup.sh"]

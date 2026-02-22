@@ -95,6 +95,21 @@ services:
       wordpress:
         condition: service_healthy
 
+  static:
+    build: ./requirements/bonus/static
+    image: static
+    container_name: static
+    restart: unless-stopped
+    ports:
+      - "225:8080"
+    networks:
+      - inception
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 networks:
   inception:
     driver: bridge
