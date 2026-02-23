@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/02/22 15:45:11     #########  #########  ###      ###       #
+#    Updated: 2026/02/22 22:24:49     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -13,7 +13,6 @@ include srcs/.env
 export $(shell sed 's/=.*//' srcs/.env)
 
 ###################################################################### Targets #
-
 all: build up
 
 build: headers
@@ -79,6 +78,10 @@ status:
 shell:
 	docker compose -f srcs/docker-compose.yaml exec nginx sh
 
+permissions:
+	sudo chown -R $$USER:$$USER ~/data_inception
+	sudo chmod -R 777 ~/data_inception
+
 .PHONY: all build up stop clean fclean re status shell oblivion
 ###################################################################### Colors #
 RESET	:= \033[0m
@@ -127,7 +130,7 @@ headers:
 		fi; 																\
 	done;																	\
 																			\
-	for file in $$(find . -name "*.md" -o -name "*.html"); do 								\
+	for file in $$(find . -name "*.md"); do 								\
 		if [ -f "$$file" ]; then 											\
 			first_line=$$(head -n 1 "$$file"); 								\
 			if [ "$$first_line" != "<!--*************************************************************************-->" ]; then 		\

@@ -5,14 +5,14 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/02/22 16:36:29      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/02/22 16:36:29     #########  #########  ###      ###       #
+#    Updated: 2026/02/23 05:46:48     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
 FROM alpine:3.22
 
 # Install curl and tar to download and extract Dozzle
-RUN apk add --no-cache curl tar
+RUN apk add --no-cache curl tar wget
 
 # Download the pre-compiled Dozzle binary (linux-amd64) from GitHub releases
 # Using version v8.13.14 which provides the tar.gz we expect

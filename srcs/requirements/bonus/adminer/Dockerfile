@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/20 16:32:35      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/01/24 13:10:14     #########  #########  ###      ###       #
+#    Updated: 2026/02/23 05:46:48     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -21,6 +21,7 @@ RUN apk update && apk upgrade && \
         curl \
         bzip2 \
         gzip \
+        wget \
         php83-session \
         php83-bz2 \
         php83-mysqli \
@@ -35,6 +36,8 @@ RUN apk update && apk upgrade && \
         xz 
 
 RUN rm -f /var/www/localhost/htdocs/index.html
+
+RUN echo "ServerName adminer" > /etc/apache2/conf.d/servername.conf
 
 COPY --chmod=644 index.php /var/www/localhost/htdocs/index.php
 

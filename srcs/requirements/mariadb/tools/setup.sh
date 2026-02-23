@@ -23,7 +23,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';
 FLUSH PRIVILEGES;
 EOF
 
-    /usr/bin/mariadbd --user=mysql --init-file=/tmp/init.sql
+    /usr/bin/mariadbd --user=mysql --bootstrap < /tmp/init.sql
     rm -f /tmp/init.sql
     echo "Database initialized."
 fi
