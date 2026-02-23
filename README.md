@@ -1,3 +1,5 @@
+_This project has been created as part of the 42 curriculum by abessa-m._
+
 <!--*************************************************************************-->
 <!--                                        ::::::::    ::::::::   ::::::::: -->
 <!-- README.md                            :+:    :+:  :+:    :+:  :+:        -->
@@ -5,11 +7,9 @@
 <!-- github.com/d-branco                    +#+         +#+      +#+#+#+     -->
 <!--                                     +#+         +#+              +#+    -->
 <!-- Created: 2026/02/23 13:41:51      #+#         #+#      +#+        #+#   -->
-<!-- Updated: 2026/02/23 13:41:51     #########  #########  ###      ###     -->
+<!-- Updated: 2026/02/23 14:14:49     #########  #########  ###      ###     -->
 <!--                                                          ########       -->
 <!--*************************************************************************-->
-
-_This project has been created as part of the 42 curriculum by abessa-m._
 
 # Inception: A Docker Story
 
@@ -133,6 +133,6 @@ For contrast, balance, and absolute transparency, I must also disclose the prima
 
 1. **Reintroduce previously vanquished bugs:** By blindly copy-pasting an "improved" NGINX configuration from a two-year-old forum post, I successfully resurrected a 502 Bad Gateway error that I had already solved and banished three days prior.
 2. **Idealize Debian "Bookworm":** I spent an embarrassing amount of time contemplating rewriting all eight Dockerfiles from Alpine Linux to Debian, entirely because "Bookworm" sounds like a much cooler operating system name than "3.21".
-3. **Demand Systemd where it doesn't belong:** I confidently typed `systemctl restart php83-fpm` inside an Alpine container at least four times before remembering that Docker containers don't have Systemd and my entrypoint script *is* PID 1.
+3. The Background Process Massacre: I wrote an elegant entrypoint script that triumphantly ended with nginx &, only to stare in pure confusion as the container immediately exited with Code 0. It took an embarrassing amount of time to realize that when PID 1 finishes reading a script, the container shuts down, instantly assassinating my perfectly healthy background processes.
 4. **Lose sanity over whitespace:** I lost three hours of my life to a "missing separator" Makefile error, violently cursing at `docker-compose`, only to discover I had used four spaces instead of a tab on line 12.
 5. **Hardcode my own username:** I initially hardcoded `/home/abessa-m/data` directly into the `docker-compose.yaml` volume definitions, guaranteeing the project would immediately crash and burn the second I tried to run it on another machine.
