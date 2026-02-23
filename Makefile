@@ -82,6 +82,14 @@ permissions:
 	sudo chown -R $$USER:$$USER ~/data_inception
 	sudo chmod -R 777 ~/data_inception
 
+bonus:
+	@\
+	sudo docker exec redis redis-cli ping >/dev/null 2>&1 && echo "$(BLUE) OK $(RESET)Redis" || echo "$(YELLOW)Redis FAIL$(RESET)" ; \
+	lftp -c "open -u pera,roberto localhost; ls" >/dev/null 2>&1 && echo "$(BLUE) OK $(RESET)FTP" || echo "$(YELLOW)FTP FAIL$(RESET)" ; \
+	curl -s -o /dev/null -w "%{http_code}" http://localhost:225 | grep -q "200" && echo "$(BLUE) OK $(RESET)Static" || echo "$(YELLOW)Static FAIL$(RESET)" ; \
+	curl -s -o /dev/null -w "%{http_code}" http://localhost:8084 | grep -q "200" && echo "$(BLUE) OK $(RESET)Adminer" || echo "$(YELLOW)Adminer FAIL$(RESET)" ; \
+	curl -s -o /dev/null -w "%{http_code}" http://localhost:8085 | grep -q "200" && echo "$(BLUE) OK $(RESET)Dozzle" || echo "$(YELLOW)Dozzle FAIL$(RESET)"
+
 .PHONY: all build up stop clean fclean re status shell oblivion
 ###################################################################### Colors #
 RESET	:= \033[0m
