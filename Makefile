@@ -5,7 +5,7 @@
 #    github.com/d-branco                    +#+         +#+      +#+#+#+       #
 #                                        +#+         +#+              +#+      #
 #    Created: 2026/01/07 14:33:04      #+#         #+#      +#+        #+#     #
-#    Updated: 2026/02/22 22:24:49     #########  #########  ###      ###       #
+#    Updated: 2026/02/23 12:13:09     #########  #########  ###      ###       #
 #                                                             ########         #
 #  **************************************************************************  #
 
@@ -82,6 +82,25 @@ permissions:
 	sudo chown -R $$USER:$$USER ~/data_inception
 	sudo chmod -R 777 ~/data_inception
 
+ftp_export:
+	@\
+	echo "$(GRAY)Exporting WordPress via FTP:$(RESET)" ; \
+	mkdir -p ./wp_backup ; \
+	lftp -c "open -u $(FTP_USER),$(FTP_PASSWORD) localhost; mirror --verbose / ./wp_backup/" && \
+	echo "$(BLUE) OK $(RESET)Export complete to ./wp_backup/" || \
+	echo "$(YELLOW) FAIL $(RESET)Export failed"
+
+ftp_import:
+	@\
+	echo "$(GRAY)Restoring WordPress via FTP:$(RESET)" ; \
+	if [ -d "./wp_backup" ]; then \
+		lftp -c "open -u $(FTP_USER),$(FTP_PASSWORD) localhost; mirror -R --no-perms --verbose ./wp_backup/ /" && \
+		echo "$(BLUE) OK $(RESET)Import complete from ./wp_backup/" || \
+		echo "$(YELLOW) FAIL $(RESET)Import failed" ; \
+	else \
+		echo "$(YELLOW) FAIL $(RESET)Backup directory ./wp_backup/ not found locally" ; \
+	fi
+
 bonus:
 	@\
 	sudo docker exec redis redis-cli ping >/dev/null 2>&1 && echo "$(BLUE) OK $(RESET)Redis" || echo "$(YELLOW)Redis FAIL$(RESET)" ; \
@@ -90,8 +109,8 @@ bonus:
 	curl -s -o /dev/null -w "%{http_code}" http://localhost:8084 | grep -q "200" && echo "$(BLUE) OK $(RESET)Adminer" || echo "$(YELLOW)Adminer FAIL$(RESET)" ; \
 	curl -s -o /dev/null -w "%{http_code}" http://localhost:8085 | grep -q "200" && echo "$(BLUE) OK $(RESET)Dozzle" || echo "$(YELLOW)Dozzle FAIL$(RESET)"
 
-.PHONY: all build up stop clean fclean re status shell oblivion
-###################################################################### Colors #
+.PHONY: all build up stop clean fclean re status shell oblivion ftp_export ftp_import
+####################################################################### Colors #
 RESET	:= \033[0m
 PURPLE	:= \033[1;35m
 GRAY	:= \033[1;90m
